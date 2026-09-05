@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gestión de Tareas</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Gestión de Tareas</h1>
+        <p>Organiza y administra tus actividades</p>
+    </header>
+
+    <main>
+        <section class="formulario">
+            <h2 id="tituloFormulario">Nueva tarea</h2>
+
+            <form id="formTarea">
+                <input type="hidden" id="tareaId">
+
+                <label for="titulo">Título</label>
+                <input
+                    type="text"
+                    id="titulo"
+                    maxlength="100"
+                    placeholder="Escribe el título"
+                    required
+                >
+
+                <label for="descripcion">Descripción</label>
+                <textarea
+                    id="descripcion"
+                    maxlength="500"
+                    placeholder="Describe la tarea"
+                ></textarea>
+
+                <label for="fechaLimite">Fecha límite</label>
+                <input type="date" id="fechaLimite">
+
+                <label class="casilla">
+                    <input type="checkbox" id="completada">
+                    Tarea completada
+                </label>
+
+                <div class="acciones-formulario">
+                    <button type="submit" id="btnGuardar">
+                        Guardar tarea
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btnCancelar"
+                        class="secundario oculto"
+                    >
+                        Cancelar edición
+                    </button>
+                </div>
+            </form>
+
+            <div id="mensaje"></div>
+        </section>
+
+        <section class="listado">
+            <div class="encabezado-listado">
+                <h2>Lista de tareas</h2>
+
+                <button type="button" id="btnActualizar" class="secundario">
+                    Actualizar
+                </button>
+            </div>
+
+            <div id="cargando" class="informacion">
+                Cargando tareas...
+            </div>
+
+            <div id="sinTareas" class="informacion oculto">
+                No existen tareas registradas.
+            </div>
+
+            <div class="tabla-contenedor">
+                <table id="tablaTareas" class="oculto">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Fecha límite</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="cuerpoTabla"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>API REST de Gestión de Tareas</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
