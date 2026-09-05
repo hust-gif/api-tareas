@@ -14,6 +14,14 @@ API REST desarrollada para administrar tareas personales. Permite crear, consult
 - Render
 - Neon
 - Postman
+- Spring Web
+- Jakarta Validation
+- Git y GitHub
+- HTML, CSS y JavaScript
+
+## Repositorio de código
+
+https://github.com/hust-gif/api-tareas
 
 ## URL de producción
 
@@ -162,6 +170,56 @@ Ejemplo de respuesta por datos incorrectos:
 | 400 | Datos enviados incorrectos |
 | 404 | Registro no encontrado |
 | 500 | Error interno del servidor |
+
+
+
+## Interfaz web
+
+El proyecto incluye una interfaz web desarrollada con HTML, CSS y JavaScript.
+Esta interfaz permite crear, consultar, actualizar y eliminar tareas mediante
+la comunicación con la API REST.
+
+La interfaz está disponible localmente en:
+
+```text
+http://localhost:8080/
+
+
+### 4. Agregar ejemplo del listado
+
+Debajo de `GET /api/tareas` y del código `200 OK`, agrega:
+
+```markdown
+Ejemplo de respuesta:
+
+```json
+[
+  {
+    "id": 1,
+    "titulo": "Preparar exposición",
+    "descripcion": "Preparar las diapositivas para la clase",
+    "completada": false,
+    "fechaLimite": "2026-09-15"
+  }
+]
+
+
+
+
+### 5. URL de producción
+
+Como Render todavía está fallando, deja honestamente:
+
+```markdown
+## URL de producción
+
+El despliegue se encuentra pendiente de corrección en Render.
+
+URL asignada:
+
+https://api-tareas-hust.onrender.com
+
+
 
 ## Ejecución local
 
