@@ -7,21 +7,69 @@ const descripcion = document.getElementById("descripcion");
 const fechaLimite = document.getElementById("fechaLimite");
 const completada = document.getElementById("completada");
 
-const tituloFormulario = document.getElementById("tituloFormulario");
-const btnGuardar = document.getElementById("btnGuardar");
-const btnCancelar = document.getElementById("btnCancelar");
-const btnActualizar = document.getElementById("btnActualizar");
+const tituloFormulario =
+    document.getElementById("tituloFormulario");
 
-const mensaje = document.getElementById("mensaje");
-const cargando = document.getElementById("cargando");
-const sinTareas = document.getElementById("sinTareas");
-const tablaTareas = document.getElementById("tablaTareas");
-const cuerpoTabla = document.getElementById("cuerpoTabla");
+const btnGuardar =
+    document.getElementById("btnGuardar");
 
-document.addEventListener("DOMContentLoaded", cargarTareas);
-formulario.addEventListener("submit", guardarTarea);
-btnActualizar.addEventListener("click", cargarTareas);
-btnCancelar.addEventListener("click", limpiarFormulario);
+const btnCancelar =
+    document.getElementById("btnCancelar");
+
+const btnActualizar =
+    document.getElementById("btnActualizar");
+
+const mensaje =
+    document.getElementById("mensaje");
+
+const cargando =
+    document.getElementById("cargando");
+
+const sinTareas =
+    document.getElementById("sinTareas");
+
+const tablaTareas =
+    document.getElementById("tablaTareas");
+
+const cuerpoTabla =
+    document.getElementById("cuerpoTabla");
+
+/* Elementos del resumen y la gráfica */
+
+const totalTareas =
+    document.getElementById("totalTareas");
+
+const totalPendientes =
+    document.getElementById("totalPendientes");
+
+const totalCompletadas =
+    document.getElementById("totalCompletadas");
+
+const graficaEstado =
+    document.getElementById("graficaEstado");
+
+const porcentajeCompletado =
+    document.getElementById("porcentajeCompletado");
+
+document.addEventListener(
+    "DOMContentLoaded",
+    cargarTareas
+);
+
+formulario.addEventListener(
+    "submit",
+    guardarTarea
+);
+
+btnActualizar.addEventListener(
+    "click",
+    cargarTareas
+);
+
+btnCancelar.addEventListener(
+    "click",
+    limpiarFormulario
+);
 
 async function cargarTareas() {
     cargando.classList.remove("oculto");
@@ -32,11 +80,18 @@ async function cargarTareas() {
         const respuesta = await fetch(API_URL);
 
         if (!respuesta.ok) {
-            throw new Error("No se pudieron obtener las tareas");
+            throw new Error(
+                "No se pudieron obtener las tareas"
+            );
         }
 
         const tareas = await respuesta.json();
+
         cuerpoTabla.innerHTML = "";
+
+        /* Actualiza las tarjetas y la gráfica */
+
+        actualizarResumen(tareas);
 
         if (tareas.length === 0) {
             sinTareas.classList.remove("oculto");
@@ -48,25 +103,53 @@ async function cargarTareas() {
 
             fila.innerHTML = `
                 <td>${tarea.id}</td>
-                <td>${escaparTexto(tarea.titulo)}</td>
-                <td>${escaparTexto(tarea.descripcion || "Sin descripción")}</td>
-                <td>${tarea.fechaLimite || "Sin fecha"}</td>
+
                 <td>
-                    <span class="estado ${tarea.completada ? "completada" : "pendiente"}">
-                        ${tarea.completada ? "Completada" : "Pendiente"}
+                    ${escaparTexto(tarea.titulo)}
+                </td>
+
+                <td>
+                    ${escaparTexto(
+                        tarea.descripcion ||
+                        "Sin descripción"
+                    )}
+                </td>
+
+                <td>
+                    ${tarea.fechaLimite || "Sin fecha"}
+                </td>
+
+                <td>
+                    <span class="estado ${
+                        tarea.completada
+                            ? "completada"
+                            : "pendiente"
+                    }">
+                        ${
+                            tarea.completada
+                                ? "Completada"
+                                : "Pendiente"
+                        }
                     </span>
                 </td>
+
                 <td>
                     <div class="botones-tabla">
-                        <button class="editar"
-                            onclick="editarTarea(${tarea.id})">
+
+                        <button
+                            class="editar"
+                            onclick="editarTarea(${tarea.id})"
+                        >
                             Editar
                         </button>
 
-                        <button class="eliminar"
-                            onclick="eliminarTarea(${tarea.id})">
+                        <button
+                            class="eliminar"
+                            onclick="eliminarTarea(${tarea.id})"
+                        >
                             Eliminar
                         </button>
+
                     </div>
                 </td>
             `;
@@ -77,10 +160,61 @@ async function cargarTareas() {
         tablaTareas.classList.remove("oculto");
 
     } catch (error) {
-        mostrarMensaje(error.message, "error");
+        mostrarMensaje(
+            error.message,
+            "error"
+        );
+
+        actualizarResumen([]);
+
     } finally {
         cargando.classList.add("oculto");
     }
+}
+
+/* Calcula pendientes y completadas */
+
+function actualizarResumen(tareas) {
+    const cantidadTotal = tareas.length;
+
+    const cantidadCompletadas =
+        tareas.filter(
+            tarea => tarea.completada
+        ).length;
+
+    const cantidadPendientes =
+        cantidadTotal - cantidadCompletadas;
+
+    let porcentaje = 0;
+
+    if (cantidadTotal > 0) {
+        porcentaje = Math.round(
+            (cantidadCompletadas / cantidadTotal) * 100
+        );
+    }
+
+    totalTareas.textContent =
+        cantidadTotal;
+
+    totalPendientes.textContent =
+        cantidadPendientes;
+
+    totalCompletadas.textContent =
+        cantidadCompletadas;
+
+    porcentajeCompletado.textContent =
+        `${porcentaje}%`;
+
+    /* Cambia el tamaño de los colores de la gráfica */
+
+    graficaEstado.style.background = `
+        conic-gradient(
+            #16a34a 0%,
+            #16a34a ${porcentaje}%,
+            #f59e0b ${porcentaje}%,
+            #f59e0b 100%
+        )
+    `;
 }
 
 async function guardarTarea(evento) {
@@ -88,31 +222,51 @@ async function guardarTarea(evento) {
 
     const datos = {
         titulo: titulo.value.trim(),
-        descripcion: descripcion.value.trim(),
-        completada: completada.checked,
-        fechaLimite: fechaLimite.value || null
+
+        descripcion:
+            descripcion.value.trim(),
+
+        completada:
+            completada.checked,
+
+        fechaLimite:
+            fechaLimite.value || null
     };
 
     const id = tareaId.value;
     const editando = id !== "";
 
     btnGuardar.disabled = true;
-    btnGuardar.textContent = editando ? "Actualizando..." : "Guardando...";
+
+    btnGuardar.textContent =
+        editando
+            ? "Actualizando..."
+            : "Guardando...";
 
     try {
         const respuesta = await fetch(
-            editando ? `${API_URL}/${id}` : API_URL,
+            editando
+                ? `${API_URL}/${id}`
+                : API_URL,
             {
-                method: editando ? "PUT" : "POST",
+                method:
+                    editando
+                        ? "PUT"
+                        : "POST",
+
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type":
+                        "application/json"
                 },
+
                 body: JSON.stringify(datos)
             }
         );
 
         if (!respuesta.ok) {
-            const error = await obtenerError(respuesta);
+            const error =
+                await obtenerError(respuesta);
+
             throw new Error(error);
         }
 
@@ -124,35 +278,62 @@ async function guardarTarea(evento) {
         );
 
         limpiarFormulario(false);
+
         await cargarTareas();
 
     } catch (error) {
-        mostrarMensaje(error.message, "error");
+        mostrarMensaje(
+            error.message,
+            "error"
+        );
+
     } finally {
         btnGuardar.disabled = false;
-        btnGuardar.textContent = "Guardar tarea";
+
+        btnGuardar.textContent =
+            "Guardar tarea";
     }
 }
 
 async function editarTarea(id) {
     try {
-        const respuesta = await fetch(`${API_URL}/${id}`);
+        const respuesta = await fetch(
+            `${API_URL}/${id}`
+        );
 
         if (!respuesta.ok) {
-            throw new Error("No se encontró la tarea");
+            throw new Error(
+                "No se encontró la tarea"
+            );
         }
 
-        const tarea = await respuesta.json();
+        const tarea =
+            await respuesta.json();
 
-        tareaId.value = tarea.id;
-        titulo.value = tarea.titulo;
-        descripcion.value = tarea.descripcion || "";
-        fechaLimite.value = tarea.fechaLimite || "";
-        completada.checked = tarea.completada;
+        tareaId.value =
+            tarea.id;
 
-        tituloFormulario.textContent = "Editar tarea";
-        btnGuardar.textContent = "Actualizar tarea";
-        btnCancelar.classList.remove("oculto");
+        titulo.value =
+            tarea.titulo;
+
+        descripcion.value =
+            tarea.descripcion || "";
+
+        fechaLimite.value =
+            tarea.fechaLimite || "";
+
+        completada.checked =
+            tarea.completada;
+
+        tituloFormulario.textContent =
+            "Editar tarea";
+
+        btnGuardar.textContent =
+            "Actualizar tarea";
+
+        btnCancelar.classList.remove(
+            "oculto"
+        );
 
         window.scrollTo({
             top: 0,
@@ -160,7 +341,10 @@ async function editarTarea(id) {
         });
 
     } catch (error) {
-        mostrarMensaje(error.message, "error");
+        mostrarMensaje(
+            error.message,
+            "error"
+        );
     }
 }
 
@@ -174,12 +358,17 @@ async function eliminarTarea(id) {
     }
 
     try {
-        const respuesta = await fetch(`${API_URL}/${id}`, {
-            method: "DELETE"
-        });
+        const respuesta = await fetch(
+            `${API_URL}/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
 
         if (!respuesta.ok) {
-            const error = await obtenerError(respuesta);
+            const error =
+                await obtenerError(respuesta);
+
             throw new Error(error);
         }
 
@@ -191,16 +380,29 @@ async function eliminarTarea(id) {
         await cargarTareas();
 
     } catch (error) {
-        mostrarMensaje(error.message, "error");
+        mostrarMensaje(
+            error.message,
+            "error"
+        );
     }
 }
 
-function limpiarFormulario(ocultarMensaje = true) {
+function limpiarFormulario(
+    ocultarMensaje = true
+) {
     formulario.reset();
+
     tareaId.value = "";
-    tituloFormulario.textContent = "Nueva tarea";
-    btnGuardar.textContent = "Guardar tarea";
-    btnCancelar.classList.add("oculto");
+
+    tituloFormulario.textContent =
+        "Nueva tarea";
+
+    btnGuardar.textContent =
+        "Guardar tarea";
+
+    btnCancelar.classList.add(
+        "oculto"
+    );
 
     if (ocultarMensaje) {
         mensaje.className = "";
@@ -215,20 +417,28 @@ function mostrarMensaje(texto, tipo) {
 
 async function obtenerError(respuesta) {
     try {
-        const datos = await respuesta.json();
+        const datos =
+            await respuesta.json();
 
         if (datos.errores) {
-            return Object.values(datos.errores).join(", ");
+            return Object.values(
+                datos.errores
+            ).join(", ");
         }
 
-        return datos.mensaje || "Ocurrió un error en la solicitud";
+        return datos.mensaje ||
+            "Ocurrió un error en la solicitud";
+
     } catch {
         return "Ocurrió un error en la solicitud";
     }
 }
 
 function escaparTexto(texto) {
-    const elemento = document.createElement("div");
+    const elemento =
+        document.createElement("div");
+
     elemento.textContent = texto;
+
     return elemento.innerHTML;
 }

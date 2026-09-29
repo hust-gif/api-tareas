@@ -2,7 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Gestión de Tareas</title>
 
@@ -16,14 +20,74 @@
         <p>Organiza y administra tus actividades</p>
     </header>
 
+    <!-- Resumen y gráfica -->
+    <section class="panel-resumen">
+
+        <div class="tarjeta-resumen tarjeta-total">
+            <div>
+                <p>Total de tareas</p>
+                <strong id="totalTareas">0</strong>
+            </div>
+
+            <div class="icono-resumen">☷</div>
+        </div>
+
+        <div class="tarjeta-resumen tarjeta-pendientes">
+            <div>
+                <p>Pendientes</p>
+                <strong id="totalPendientes">0</strong>
+            </div>
+
+            <div class="icono-resumen">◷</div>
+        </div>
+
+        <div class="tarjeta-resumen tarjeta-completadas">
+            <div>
+                <p>Completadas</p>
+                <strong id="totalCompletadas">0</strong>
+            </div>
+
+            <div class="icono-resumen">✓</div>
+        </div>
+
+        <div class="tarjeta-grafica">
+            <div
+                id="graficaEstado"
+                class="grafica-circular"
+                aria-label="Gráfica de tareas pendientes y completadas"
+            >
+                <div class="centro-grafica">
+                    <strong id="porcentajeCompletado">0%</strong>
+                    <span>Completado</span>
+                </div>
+            </div>
+
+            <div class="leyenda-grafica">
+                <div>
+                    <span class="color-leyenda pendiente"></span>
+                    Pendientes
+                </div>
+
+                <div>
+                    <span class="color-leyenda completada"></span>
+                    Completadas
+                </div>
+            </div>
+        </div>
+
+    </section>
+
     <main>
+
         <section class="formulario">
             <h2 id="tituloFormulario">Nueva tarea</h2>
 
             <form id="formTarea">
+
                 <input type="hidden" id="tareaId">
 
                 <label for="titulo">Título</label>
+
                 <input
                     type="text"
                     id="titulo"
@@ -32,23 +96,40 @@
                     required
                 >
 
-                <label for="descripcion">Descripción</label>
+                <label for="descripcion">
+                    Descripción
+                </label>
+
                 <textarea
                     id="descripcion"
                     maxlength="500"
                     placeholder="Describe la tarea"
                 ></textarea>
 
-                <label for="fechaLimite">Fecha límite</label>
-                <input type="date" id="fechaLimite">
+                <label for="fechaLimite">
+                    Fecha límite
+                </label>
+
+                <input
+                    type="date"
+                    id="fechaLimite"
+                >
 
                 <label class="casilla">
-                    <input type="checkbox" id="completada">
+                    <input
+                        type="checkbox"
+                        id="completada"
+                    >
+
                     Tarea completada
                 </label>
 
                 <div class="acciones-formulario">
-                    <button type="submit" id="btnGuardar">
+
+                    <button
+                        type="submit"
+                        id="btnGuardar"
+                    >
                         Guardar tarea
                     </button>
 
@@ -59,31 +140,52 @@
                     >
                         Cancelar edición
                     </button>
+
                 </div>
+
             </form>
 
             <div id="mensaje"></div>
+
         </section>
 
         <section class="listado">
+
             <div class="encabezado-listado">
+
                 <h2>Lista de tareas</h2>
 
-                <button type="button" id="btnActualizar" class="secundario">
+                <button
+                    type="button"
+                    id="btnActualizar"
+                    class="secundario"
+                >
                     Actualizar
                 </button>
+
             </div>
 
-            <div id="cargando" class="informacion">
+            <div
+                id="cargando"
+                class="informacion"
+            >
                 Cargando tareas...
             </div>
 
-            <div id="sinTareas" class="informacion oculto">
+            <div
+                id="sinTareas"
+                class="informacion oculto"
+            >
                 No existen tareas registradas.
             </div>
 
             <div class="tabla-contenedor">
-                <table id="tablaTareas" class="oculto">
+
+                <table
+                    id="tablaTareas"
+                    class="oculto"
+                >
+
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -96,9 +198,13 @@
                     </thead>
 
                     <tbody id="cuerpoTabla"></tbody>
+
                 </table>
+
             </div>
+
         </section>
+
     </main>
 
     <footer>
@@ -106,5 +212,6 @@
     </footer>
 
     <script src="app.js"></script>
+
 </body>
 </html>
